@@ -1,21 +1,23 @@
-- name: Install Prometheus and Requirements
-  hosts: all
-  become: true
-  tasks:
-    - name: Install required packages for Prometheus
-      apt:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - prometheus
-        - prometheus-node-exporter
-      when: ansible_distribution == "Ubuntu"
+- name: Install Prometheus
+  apt:
+    name: prometheus
+    state: present
+  when: ansible_distribution == "Ubuntu"
 
-    - name: Install required packages for Prometheus
-      yum:
-        name: "{{ item }}"
-        state: present
-      loop:
-        - prometheus
-        - prometheus-node-exporter
-      when: ansible_distribution == "CentOS"
+- name: Install Prometheus Node Exporter (example, you might need to adjust based on your needs)
+  apt:
+    name: prometheus-node-exporter
+    state: present
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Prometheus
+  yum:
+    name: prometheus
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install Prometheus Node Exporter (example, you might need to adjust based on your needs)
+  yum:
+    name: prometheus-node-exporter
+    state: present
+  when: ansible_distribution == "CentOS"
