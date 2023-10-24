@@ -8,6 +8,11 @@
     enabled: 1
   when: ansible_distribution == "CentOS"
 
+- name: Import GPG key for Prometheus
+  rpm_key:
+    key: https://packagecloud.io/prometheus-rpm/release/gpgkey
+  when: ansible_distribution == "CentOS"
+
 - name: Install Prometheus
   apt:
     name: prometheus
