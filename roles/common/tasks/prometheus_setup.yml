@@ -2,7 +2,7 @@
   hosts: your_target_hosts
   become: yes
   tasks:
-    - name: Add Prometheus repository
+    - name: Add Prometheus repository (CentOS)
       yum_repository:
         name: prometheus
         description: Prometheus repository
