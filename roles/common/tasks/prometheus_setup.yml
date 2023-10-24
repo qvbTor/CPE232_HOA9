@@ -1,42 +1,44 @@
-- name: Add Prometheus repository for CentOS
-  yum_repository:
-    name: prometheus
-    description: Prometheus repository
-    baseurl: https://packagecloud.io/prometheus-rpm/release/el/$releasever/$basearch
-    gpgcheck: 1
-    gpgkey: https://packagecloud.io/prometheus-rpm/release/gpgkey
-    enabled: 1
-  when: ansible_distribution == "CentOS"
+- name: Install Prometheus and necessary packages
+  hosts: your_target_hosts
+  become: yes
+  tasks:
+    - name: Add Prometheus repository
+      yum_repository:
+        name: prometheus
+        description: Prometheus repository
+        baseurl: "https://packagecloud.io/prometheus-rpm/release/el/{{ ansible_distribution_major_version }}/{{ ansible_architecture }}"
+        gpgcheck: 1
+        gpgkey: "https://packagecloud.io/prometheus-rpm/release/gpgkey"
+        enabled: 1
+      when: ansible_os_family == "RedHat"
 
-- name: Import GPG key for Prometheus
-  rpm_key:
-    key: https://packagecloud.io/prometheus-rpm/release/gpgkey
-  when: ansible_distribution == "CentOS"
+    - name: Import GPG key for Prometheus (CentOS)
+      rpm_key:
+        key: "https://packagecloud.io/prometheus-rpm/release/gpgkey"
+        state: present
+      when: ansible_os_family == "RedHat"
 
-- name: Install Prometheus
-  apt:
-    name: prometheus
-    state: latest
-  when: ansible_distribution == "Ubuntu"
+    - name: Add Prometheus repository (Ubuntu)
+      apt_repository:
+        repo: "deb https://packagecloud.io/prometheus-rpm/release/ubuntu/ {{ ansible_distribution_release }} main"
+        state: present
+        filename: prometheus
+        update_cache: yes
+      when: ansible_os_family == "Debian"
 
-- name: Install Prometheus
-  yum:
-    name: prometheus
-    state: present
-  when: ansible_distribution == "CentOS"
+    - name: Import GPG key for Prometheus (Ubuntu)
+      apt_key:
+        url: "https://packagecloud.io/prometheus-rpm/release/gpgkey"
+        state: present
+      when: ansible_os_family == "Debian"
 
-- name: Install necessary packages for Prometheus
-  apt:
-    name: 
-      - prometheus-node-exporter
-      - prometheus-alertmanager
-    state: latest
-  when: ansible_distribution == "Ubuntu"
-
-- name: Install necessary packages for Prometheus
-  yum:
-    name: 
-      - prometheus-node-exporter
-      - prometheus-alertmanager
-    state: present
-  when: ansible_distribution == "CentOS"
+    - name: Install Prometheus and necessary packages
+      package:
+        name:
+          - prometheus
+          - "{{ item }}"
+        state: "{{ 'latest' if ansible_os_family == 'Debian' else 'present' }}"
+      loop:
+        - prometheus-node-exporter
+        - prometheus-alertmanager
+      when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
