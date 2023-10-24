@@ -1,6 +1,6 @@
 ---
-# tasks file for roles/nagios
+# tasks file for roles/Prometheus
 
-- name: Install Nagios
+- name: Install Prometheus
   ansible.builtin.include_tasks:
    file: prometheus_setup.yml
