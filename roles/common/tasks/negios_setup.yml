@@ -1,0 +1,27 @@
+# Nagios Installation for Ubuntu
+- name: Install Nagios Core
+  apt:
+    name: nagios4-core
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install Nagios Plugins
+  apt:
+    name: nagios-plugins
+    state: present
+  when: ansible_distribution == "Ubuntu"
+#
+
+# Nagios Installation for CentOS
+- name: Install Nagios Core
+  yum:
+    name: nagios
+    state: present
+  when: ansible_distribution == "CentOS"
+
+- name: Install Nagios Plugins
+  yum:
+    name: nagios-plugins-all
+    state: present
+  when: ansible_distribution == "CentOS"
+#
