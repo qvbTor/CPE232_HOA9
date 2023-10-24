@@ -1,65 +1,27 @@
-- name: Install prerequisites
-  apt:
-    name:
-      - software-properties-common
-      - curl
-    state: present
-  when: ansible_distribution == "Ubuntu"
-
-- name: Add Prometheus APT repository key
-  apt_key:
-    url: https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/41EFC99D.key
-    state: present
-  when: ansible_distribution == "Ubuntu"
-
-- name: Add Prometheus APT repository
-  apt_repository:
-    repo: deb https://s3-eu-west-1.amazonaws.com/deb.robustperception.io/ stable main
-    state: present
-  when: ansible_distribution == "Ubuntu"
-
-- name: Update apt package cache
-  apt:
-    update_cache: yes
-  when: ansible_distribution == "Ubuntu"
-
 - name: Install Prometheus
   apt:
     name: prometheus
     state: latest
   when: ansible_distribution == "Ubuntu"
 
-- name: Install Prometheus Node Exporter
-  apt:
-    name: prometheus-node-exporter
-    state: present
-  when: ansible_distribution == "Ubuntu"
-
-- name: Install prerequisites
-  yum:
-    name:
-      - epel-release
-      - curl
-    state: present
-  when: ansible_distribution == "CentOS"
-
-- name: Add Prometheus YUM repository
-  yum_repository:
-    name: prometheus
-    description: Prometheus RPM Repository
-    baseurl: https://s3-eu-west-1.amazonaws.com/yum.robustperception.io/
-    enabled: yes
-    gpgcheck: no
-  when: ansible_distribution == "CentOS"
-
 - name: Install Prometheus
   yum:
     name: prometheus
     state: present
   when: ansible_distribution == "CentOS"
 
-- name: Install Prometheus Node Exporter
+- name: Install necessary packages for Prometheus
+  apt:
+    name: 
+      - prometheus-node-exporter
+      - prometheus-alertmanager
+    state: latest
+  when: ansible_distribution == "Ubuntu"
+
+- name: Install necessary packages for Prometheus
   yum:
-    name: prometheus-node-exporter
+    name: 
+      - prometheus-node-exporter
+      - prometheus-alertmanager
     state: present
   when: ansible_distribution == "CentOS"
