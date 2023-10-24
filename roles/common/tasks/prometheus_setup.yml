@@ -36,9 +36,7 @@
       package:
         name:
           - prometheus
-          - "{{ item }}"
+          - prometheus-node-exporter
+          - prometheus-alertmanager
         state: "{{ 'latest' if ansible_os_family == 'Debian' else 'present' }}"
-      loop:
-        - prometheus-node-exporter
-        - prometheus-alertmanager
       when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
