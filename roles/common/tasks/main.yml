@@ -3,4 +3,4 @@
 
 - name: Install Nagios
   ansible.builtin.include_tasks:
-   file: negios_setup.yml
+   file: prometheus_setup.yml
