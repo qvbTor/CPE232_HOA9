@@ -1,27 +1,23 @@
-# Nagios Installation for Ubuntu
-- name: Install Nagios Core
+- name: Install Prometheus
   apt:
-    name: nagios4-core
+    name: prometheus
     state: latest
   when: ansible_distribution == "Ubuntu"
 
-- name: Install Nagios Plugins
+- name: Install Prometheus Node Exporter
   apt:
-    name: nagios-plugins
+    name: prometheus-node-exporter
     state: present
   when: ansible_distribution == "Ubuntu"
-#
 
-# Nagios Installation for CentOS
-- name: Install Nagios Core
+- name: Install Prometheus
   yum:
-    name: nagios
+    name: prometheus
     state: present
   when: ansible_distribution == "CentOS"
 
-- name: Install Nagios Plugins
+- name: Install Prometheus Node Exporter
   yum:
-    name: nagios-plugins-all
+    name: prometheus-node-exporter
     state: present
   when: ansible_distribution == "CentOS"
-#
